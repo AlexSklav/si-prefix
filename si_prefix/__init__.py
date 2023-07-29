@@ -1,5 +1,4 @@
 # coding: utf-8
-from __future__ import division
 import math
 import re
 
@@ -41,7 +40,7 @@ SI_PREFIX_UNITS = u"yzafpnµm kMGTPEZY"
 CRE_SI_NUMBER = re.compile(r'\s*(?P<sign>[\+\-])?'
                            r'(?P<integer>\d+)'
                            r'(?P<fraction>.\d+)?\s*'
-                           u'(?P<si_unit>[%s])?\s*' % SI_PREFIX_UNITS)
+                           rf'(?P<si_unit>[{SI_PREFIX_UNITS}])?\s*')
 
 
 def split(value, precision=1):
@@ -208,7 +207,7 @@ def si_format(value, precision=1, format_str=u'{value} {prefix}',
         http://physics.nist.gov/cuu/Units/checklist.html
     '''
     svalue, expof10 = split(value, precision)
-    value_format = u'%%.%df' % precision
+    value_format = f'%.{precision}f'
     value_str = value_format % svalue
     try:
         return format_str.format(value=value_str,
@@ -246,7 +245,8 @@ def si_parse(value):
                                 r'(?P<expof10>[\+\-]?\d+))?$')
     CRE_SI_NUMBER = re.compile(r'^\s*(?P<number>(?P<integer>[\+\-]?\d+)?'
                                r'(?P<fraction>.\d+)?)\s*'
-                               u'(?P<si_unit>[%s])?\s*$' % SI_PREFIX_UNITS)
+                               rf'(?P<si_unit>[{SI_PREFIX_UNITS}])?\s*$')
+
     match = CRE_10E_NUMBER.match(value)
     if match:
         # Can be parse using `float`.
